@@ -1,18 +1,23 @@
 1) Minimuim RTO for a single AZ outage
+In case of Single availablity zone there can only be automated back up possible. 
+Also there can 3 types of failure.
+a) Recoverable EBS volume failure:- Here RTO = 30 min.
+b) Non- Recoverable EBS volume failure:- Here RTO = 30 min.
+c) Availabilty Zone Failure:- RTO = 30 min.
+
 2) Minimum RTO for a single region outage
+
+If Database Replica is maintained then RTO will be zero because infrastructure can be configured to response an event to swithc DNS to point to replica DB. 
+If Database Snapshot is being copied manually then time to recover will include creating new RDS instance from S3 snapshot. i.e. 30 min.
+
+
 3) Minimum RPO for a single AZ outage
+Replica model: RPO = 0 min
+Automated back up model: RPO = 5 min 
+Manual Back up  : RPO = Last time whenever manual back up is being taken
+
+
 4) Minimuim RPO for a single region outage
-
-All the RDS AWS service need to basic resources from AWS. 
-a) EC2 instances
-b) EBS
-
-Based on the above resources there can be 3 types of failure.
-1) Recoverable EC2 instance failure - In this hardware failure occour of the EC2 instance that is used by RDS service.
-RDS service tries to recover either the same instance or may be after couple of retry it spin up another RDS instance. During all this time RDS service is available.
-RTO for this is 30 min since RDS service will take time to spin up new instance but RPO will remail 0 as EBS associated with the RDS service remain intact.
-
-2) Non- Recoverable EC2 instance failure or EBS failure - In this scenario entire EC2 instance or EBS instance hit with a hardware failure.
-In this scenario entire RDS service instance needs to launch. Launching new RDS instance will take only may be 5 min but then copy of the data from transaction logs from S3 to newly created RDS instance might take more than expected time sometime hours.
-
-RTO for this kind of failure might be 5-15 min but then RPO will take time from 1 hr till unknow hours. i.e. based on the size of database.
+Replica model: RPO = 0 min
+Automated back up model: RPO = 5 min 
+Manual Back up  : RPO = Last time whenever manual back up is being taken
